@@ -1,40 +1,78 @@
 import FormView from '../views/FormView.js'
 import ResultView from '../views/ResultView.js'
+import TabView from '../views/TabView.js'
+import KeywordView from '../views/KeywordView.js'
+
 import SearchModel from '../models/SearchModel.js'
-const tag = '[MainController]';
+import KeywordModel from '../models/KeywordModel.js'
+
+const tag = '[MainController]'
 
 export default {
-    init() {
-        console.log(tag, 'init()');
+  init() {
+    FormView.setup(document.querySelector('form'))
+      .on('@submit', e => this.onSubmit(e.detail.input)) // return this
+      .on('@reset', e => this.onResetForm())
 
-        FormView
-        .setup(document.querySelector('form')) // return this 
-        .on('@submit', e => this.onSubmit(e.detail.input))
-        .on('@reset', e => this.onResetForm());
+    TabView.setup(document.querySelector('#tabs'))
+      .on('@change', e => this.onChangeTab(e.detail.tabName))
 
-        ResultView
-        .setup(document.querySelector('#search-result'));
-    },
+    KeywordView.setup(document.querySelector('#search-keyword'))
+      .on('@click', e => this.onClickKeyword(e.detail.keyword))
 
-    search(query) {
-        console.log(tag, 'search()', query);
-        // SearchModel: search api 역할
-        SearchModel.list(query).then(data => {
-            this.onSearchResult(data);
-        })
-    },
+    ResultView.setup(document.querySelector('#search-result'))
 
-    onSubmit(input) {
-        console.log(tag, 'onSubmit()', input);
-        this.search(input);
-    },
+    this.selectedTab = '추천 검색어'
+    this.renderView()
+  },
 
-    onResetForm() {
-        console.log(tag, 'onResetForm()');
-        ResultView.hide();
-    },
+  renderView() {
+    console.log(tag, 'rednerView()')
+    TabView.setActiveTab(this.selectedTab)
+    
+    if (this.selectedTab === '추천 검색어') {
+      this.fetchSearchKeyword()
+    } else {
+      debugger
+    }
 
-    onSearchResult(data) {
-        ResultView.render(data);
-    },
+    ResultView.hide()
+  },
+
+  fetchSearchKeyword() {
+    KeywordModel.list().then(data => {
+      KeywordView.render(data)
+    })
+  },
+
+  // SearchModel: search api 역할
+  search(query) {
+    SearchModel.list(query).then(data => {
+      this.onSearchResult(data)
+    })
+  },
+
+  onSubmit(input) {
+    console.log(tag, 'onSubmit()', input)
+    this.search(input)
+  },
+
+  onResetForm() {
+    console.log(tag, 'onResetForm()')
+    ResultView.hide()
+  },
+
+  onSearchResult(data) {
+    TabView.hide()
+    KeywordView.hide()
+    ResultView.render(data)
+  },
+
+  onChangeTab(tabName) {
+    debugger
+  },
+
+  onClickKeyword(keyword) {
+    this.search(keyword)
+  }
 }

@@ -1,39 +1,39 @@
-import View from './View.js';
+import View from './View.js'
 
-const tag = '[FormView]';
+const tag = '[FormView]'
 
-const FormView = Object.create(View);
+const FormView = Object.create(View)
 
-FormView.setup = function(el) {
-    this.init(el);
-    this.inputEl = el.querySelector('[type=text]');
-    this.resetEl = el.querySelector('[type=reset]');
-    this.bindEvents();
-    this.showResetBtn(false);
-    return this;
+FormView.setup = function (el) {
+  this.init(el)
+  this.inputEl = el.querySelector('[type=text]')
+  this.resetEl = el.querySelector('[type=reset')
+  this.showResetBtn(false)
+  this.bindEvents()
+  return this
+}
+
+FormView.showResetBtn = function (show = true) {
+  this.resetEl.style.display = show ? 'block' : 'none'
 }
 
 FormView.bindEvents = function () {
-    this.on('submit', e => e.preventDefault());
-    this.inputEl.addEventListener('keyup', e => this.onKeyup(e));
-    this.resetEl.addEventListener('click', e => this.onClickReset(e));
+  this.on('submit', e => e.preventDefault())
+  this.inputEl.addEventListener('keyup', e => this.onKeyup(e))
+  this.resetEl.addEventListener('click', e => this.onClickReset())
 }
 
-FormView.showResetBtn = function(show = true) {
-    this.resetEl.style.display = show ? 'block': 'none';
+FormView.onKeyup = function (e) {
+  const enter = 13
+  this.showResetBtn(this.inputEl.value.length)
+  if (!this.inputEl.value.length) this.emit('@reset') // 컨트롤러에게 위임
+  if (e.keyCode !== enter) return
+  this.emit('@submit', { input: this.inputEl.value }) // 컨트롤러에게 위임
 }
 
-FormView.onKeyup = function(e) {
-    const enter = 13;
-    this.showResetBtn(this.inputEl.value.length);
-    if (!this.inputEl.value.length) this.emit('@reset'); // 컨트롤러에게 위임
-    if (e.keyCode !== enter) return;
-    this.emit('@submit', { input: this.inputEl.value }); // 컨트롤러에게 위임
+FormView.onClickReset = function () {
+  this.emit('@reset') // 컨트롤러에게 위임
+  this.showResetBtn(false)
 }
 
-FormView.onClickReset = function(e) {
-    this.emit('@reset'); // 컨트롤러에게 위임
-    this.showResetBtn(this.inputEl.value.length);
-}
-
-export default FormView;
+export default FormView
