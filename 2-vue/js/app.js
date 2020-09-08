@@ -6,7 +6,13 @@ new Vue({
         //  입력데이터 받아서 저장
         query: '',
         submitted: false,
+        tabs: ['추천 검색어', '최근 검색어'],
+        selectedTab: '',
         searchResult: []
+    },
+    // Vue Instance 생성될 때 호출되는 lifecycle
+    created() {
+        this.selectedTab = this.tabs[0];
     },
     methods: {
         onSubmit(e) {
@@ -17,6 +23,9 @@ new Vue({
         },
         onKeyup() {
             if(!this.query.length) this.onReset();
+        },
+        onClickTab(tab) {
+            this.selectedTab = tab;
         },
         search() {
             SearchModel.list().then(data => {
