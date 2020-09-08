@@ -14,7 +14,13 @@
     </header>
 
     <div class="container">
-      {{msg}}
+      <!-- v-on: 뷰디렉티브, 돔에서 일어나는 이벤트 리슨 -->
+      <!-- .prevent == e.preventDefault() -->
+      <form v-on:submit.prevent="onSubmit">
+        <!-- v-model: 뷰디렉티브, 양방향 데이터 바인딩 지원 -->
+        <input v-on:keyup.prevent="onKeyup" type="text" v-model="query" placeholder="검색어를 입력하세요" autofocus>
+        <button v-on:click.prevent="onReset" type="reset" v-show="query.length" class="btn-reset"></button>
+      </form>
     </div>
   </div>
   <script src="https://unpkg.com/vue"></script>
