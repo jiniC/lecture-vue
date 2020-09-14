@@ -1,18 +1,22 @@
 import SearchModel from './models/SearchModel.js'
+import KeywordModel from './models/KeywordModel.js'
+
 new Vue({
     // vue 인스턴스가 html의 어느 돔에 붙어 마운팅될지
     el: '#app',
     data: {
-        //  입력데이터 받아서 저장
+        // 입력데이터 받아서 저장
         query: '',
         submitted: false,
         tabs: ['추천 검색어', '최근 검색어'],
         selectedTab: '',
-        searchResult: []
+        keywords: [],
+        searchResult: [],
     },
     // Vue Instance 생성될 때 호출되는 lifecycle
     created() {
         this.selectedTab = this.tabs[0];
+        this.fetchKeyword();
     },
     methods: {
         onSubmit(e) {
@@ -26,6 +30,15 @@ new Vue({
         },
         onClickTab(tab) {
             this.selectedTab = tab;
+        },
+        onClickKeyword(keyword) {
+            this.query = keyword;
+            this.search();
+        },
+        fetchKeyword() {
+            KeywordModel.list().then(data => {
+                this.keywords = data;
+            })
         },
         search() {
             SearchModel.list().then(data => {
