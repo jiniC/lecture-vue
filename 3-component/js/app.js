@@ -3,6 +3,7 @@ import KeywordModel from "./models/KeywordModel.js";
 import HistoryModel from "./models/HistoryModel.js";
 
 import FormComponent from "./components/FormComponent.js";
+import ResultComponent from "./components/ResultComponent.js";
 
 new Vue({
   // vue 인스턴스가 html의 어느 돔에 붙어 마운팅될지
@@ -19,6 +20,7 @@ new Vue({
   },
   components: {
     "search-form": FormComponent,
+    "search-result": ResultComponent,
   },
   // Vue Instance 생성될 때 호출되는 lifecycle
   created() {
